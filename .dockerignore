@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+.env.*
+.git
+work
+data/
+vocabulary.json
+*.db
+*.db-*
+*.log
+npm-debug.log*
+*.tsbuildinfo
+*.zip

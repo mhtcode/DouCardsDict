@@ -1,0 +1,62 @@
+services:
+  word-studio:
+    build:
+      context: .
+      target: runtime
+    restart: unless-stopped
+    init: true
+    environment:
+      PORT: 8765
+      DATA_DIR: data
+      DUOCARDS_DECK_ID: ${DUOCARDS_DECK_ID}
+      SYNC_INTERVAL_HOURS: ${SYNC_INTERVAL_HOURS:-4}
+      DICTIONARY_API: ${DICTIONARY_API:-https://api.dictionaryapi.dev/api/v2/entries/en}
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      OLLAMA_EMBED_MODEL: ${OLLAMA_EMBED_MODEL:-embeddinggemma}
+      OLLAMA_CHAT_MODEL: ${OLLAMA_CHAT_MODEL:-qwen3:4b}
+      APP_PASSWORD: ${APP_PASSWORD:?Set APP_PASSWORD in .env before starting Docker}
+      COOKIE_SECURE: auto
+      TRUST_PROXY: 1
+      SESSION_DAYS: ${SESSION_DAYS:-30}
+    volumes:
+      - studio-data:/app/data
+    ports:
+      - "127.0.0.1:8765:8765"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8765/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      word-studio:
+        condition: service_healthy
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile.example:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["enrichment"]
+    restart: unless-stopped
+    volumes:
+      - ollama-data:/root/.ollama
+
+volumes:
+  studio-data:
+  caddy-data:
+  caddy-config:
+  ollama-data:
