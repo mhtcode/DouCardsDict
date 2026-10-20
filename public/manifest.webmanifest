@@ -1,0 +1,10 @@
+{
+  "name": "English Word Studio",
+  "short_name": "Word Studio",
+  "description": "Private adaptive English vocabulary and dictation practice.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060d18",
+  "theme_color": "#07111f",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

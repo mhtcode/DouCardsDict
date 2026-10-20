@@ -1,0 +1,47 @@
+{
+  "name": "english-word-studio",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.mjs",
+    "dev": "concurrently -k -n api,web -c cyan,blue \"node --watch --env-file-if-exists=.env server.mjs\" \"vite --host 127.0.0.1\"",
+    "build": "tsc -b && vite build",
+    "typecheck": "tsc -b --pretty false",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "enrich": "node --env-file-if-exists=.env scripts/enrich.mjs",
+    "verify:data": "node --env-file-if-exists=.env scripts/verify-data.mjs",
+    "backup": "node --env-file-if-exists=.env scripts/backup.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
+    "@fontsource-variable/vazirmatn": "^5.2.8",
+    "d3-force": "^3.0.0",
+    "double-metaphone": "^2.0.1",
+    "lucide-react": "^0.536.0",
+    "motion": "^12.23.12",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "ts-fsrs": "^5.2.0",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@types/d3-force": "^3.0.10",
+    "@types/node": "^24.2.0",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^9.2.0",
+    "jsdom": "^26.1.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.1",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=24.0"
+  }
+}

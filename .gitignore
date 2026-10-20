@@ -1,0 +1,14 @@
+node_modules/
+dist/
+data/
+.env
+.env.*
+!.env.example
+vocabulary.json
+*.db
+*.db-*
+*.log
+npm-debug.log*
+*.tsbuildinfo
+*.zip
+.DS_Store
