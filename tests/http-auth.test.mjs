@@ -67,6 +67,14 @@ describe('HTTP authentication, CSRF and session lifecycle', () => {
     expect(setCookie).toContain('SameSite=Strict')
     const cookie = setCookie.split(';')[0]
 
+    const imported = await fetch(`${origin}/api/import`, {
+      method: 'POST',
+      headers: { cookie, 'x-csrf-token': session.csrfToken, 'content-type': 'text/csv' },
+      body: 'front,back,hint,publishedAt\nfixture alpha,نمونه آلفا,Fixture alpha appears first.,ci-fixture-alpha\nfixture beta,نمونه بتا,Fixture beta appears second.,ci-fixture-beta',
+    })
+    expect(imported.status).toBe(200)
+    expect(await imported.json()).toMatchObject({ added: 2 })
+
     const blocked = await fetch(`${origin}/api/backup`, { method: 'POST', headers: { cookie } })
     expect(blocked.status).toBe(403)
     const allowed = await fetch(`${origin}/api/backup`, { method: 'POST', headers: { cookie, 'x-csrf-token': session.csrfToken } })
